@@ -3,6 +3,7 @@ import google.generativeai as genai
 import json
 import pandas as pd
 from typing import List, Dict, Optional, Tuple
+import os
 
 # Configuration
 # Weaviate API Configuration
@@ -14,7 +15,11 @@ WEAVIATE_API_URL = LOCAL_WEAVIATE_URL if USE_LOCAL_WEAVIATE else PRODUCTION_WEAV
 
 print(f"🔧 Using Weaviate API: {WEAVIATE_API_URL}")
 
-genai.configure(api_key="AIzaSyABQWccDN9IN329aW39pKblYKFX2E-2D8I")
+# Configure Gemini API
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY environment variable is not set")
+genai.configure(api_key=GEMINI_API_KEY)
 
 # In-memory storage for summaries
 chat_summaries = {}
@@ -533,7 +538,7 @@ def search_products_weaviate(search_term: str, collection: str = "SupermarketPro
         "limit": limit
     }
     
-    print(f"�� Searching Weaviate for '{search_term}' in collection '{collection}'")
+    print(f"🔍 Searching Weaviate for '{search_term}' in collection '{collection}'")
     print(f"🔗 URL: {url}")
     
     try:
